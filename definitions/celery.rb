@@ -2,6 +2,7 @@
 define :celery_app do
   celeryd = "celeryd-#{params[:name]}"
   celerybeat = "celerybeat-#{params[:name]}"
+  newrelic = params[:newrelic]
   root_dir = params[:root_dir].sub(/\/$/, '')
 
   template "/etc/default/#{celeryd}" do
@@ -11,7 +12,8 @@ define :celery_app do
     group 'root'
     mode '0700'
     variables ({
-      :chdir => root_dir
+      :chdir => root_dir,
+      :newrelic => newrelic
     })
   end
 
