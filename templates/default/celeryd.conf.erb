@@ -1,8 +1,9 @@
-<% if @newrelic %>
-export NEWRELIC_CONFIG_FILE=<%= @chdir %>/newrelic.ini 
-CELERYD_MULTI="<%= @chdir %>/virtualenv/bin/newrelic-admin run-program <%= @chdir %>/virtualenv/bin/python <%= @chdir %>/manage.py deployed celery multi"
-<% else %>
 CELERYD_CHDIR=<%= @chdir %>
+<% if @newrelic %>
+#export NEWRELIC_CONFIG_FILE=<%= @chdir %>/newrelic.ini 
+#CELERYD_MULTI="<%= @chdir %>/virtualenv/bin/newrelic-admin run-program <%= @chdir %>/virtualenv/bin/python <%= @chdir %>/manage.py deployed celery multi"
+CELERYD_MULTI="<%= @chdir %>/virtualenv/bin/python <%= @chdir %>/manage.py deployed celery multi"
+<% else %>
 ENV_PYTHON=$CELERYD_CHDIR/virtualenv/bin/python
 CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py deployed celery multi"
 <% end %>
