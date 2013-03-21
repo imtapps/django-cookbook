@@ -21,12 +21,12 @@
 # abnormally in the absence of a valid process ID.
 #set -e
 
-DEFAULT_PID_FILE="/var/run/celery/beat.pid"
-DEFAULT_LOG_FILE="/var/log/celery/beat.log"
+DEFAULT_PID_FILE="/var/run/celery/<%= @celerybeat_name %>.pid"
+DEFAULT_LOG_FILE="/var/log/celery/<%= @celerybeat_name %>.log"
 DEFAULT_LOG_LEVEL="INFO"
 DEFAULT_CELERYBEAT="celerybeat"
 
-# /etc/init.d/celerybeat: start and stop the celery periodic task scheduler daemon.
+# /etc/init.d/celerybeat: start and stopp the celery periodic task scheduler daemon.
 CELERY_DEFAULTS=<%= @celery_defaults %>
 CELERYBEAT_DEFAULTS=<%= @celerybeat_defaults %>
 

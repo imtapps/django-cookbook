@@ -1,9 +1,9 @@
-
 define :celery_app do
   celeryd = "celeryd-#{params[:name]}"
   celerybeat = "celerybeat-#{params[:name]}"
   newrelic = params[:newrelic]
-  root_dir = params[:root_dir].sub(/\/$/, '')
+  virtualenv_path = params[:virtualenv_path].sub(/\/$/, '')
+  managepy_path = params[:managepy_path].sub(/\/$/, '')
 
   template "/etc/default/#{celeryd}" do
     source 'celeryd.conf.erb'
@@ -12,8 +12,8 @@ define :celery_app do
     group 'root'
     mode '0700'
     variables ({
-      :chdir => root_dir,
-      :newrelic => newrelic
+      :virtualenv_path => virtualenv_path,
+      :managepy_path => managepy_path
     })
   end
 
@@ -25,30 +25,35 @@ define :celery_app do
     mode '0755'
     variables ({
       :celery_defaults => "/etc/default/#{celeryd}",
+      :celeryd_name => celeryd
     })
   end
 
-  template "/etc/default/#{celerybeat}" do
-    source 'celerybeat.conf.erb'
-    cookbook "django"
-    owner 'root'
-    group 'root'
-    mode '0700'
-    variables ({
-      :chdir => root_dir
-    })
-  end
+  if params[:celerybeat]
+    template "/etc/default/#{celerybeat}" do
+      source 'celerybeat.conf.erb'
+      cookbook "django"
+      owner 'root'
+      group 'root'
+      mode '0700'
+      variables ({
+        :virtualenv_path => virtualenv_path,
+        :managepy_path => managepy_path
+      })
+    end
 
-  template "/etc/init.d/#{celerybeat}" do
-    source 'celerybeat.erb'
-    cookbook "django"
-    owner 'root'
-    group 'root'
-    mode '0755'
-    variables ({
-      :celery_defaults => "/etc/default/#{celeryd}",
-      :celerybeat_defaults => "/etc/default/#{celerybeat}",
-    })
+    template "/etc/init.d/#{celerybeat}" do
+      source 'celerybeat.erb'
+      cookbook "django"
+      owner 'root'
+      group 'root'
+      mode '0755'
+      variables ({
+        :celery_defaults => "/etc/default/#{celeryd}",
+        :celerybeat_defaults => "/etc/default/#{celerybeat}",
+        :celeryd_name => celeryd,
+        :celerybeat_name => celerybeat
+      })
+    end
   end
-
 end
