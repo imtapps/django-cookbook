@@ -7,3 +7,4 @@ CELERYD_MULTI="<%= @virtualenv_path %>/virtualenv/bin/python <%= @managepy_path 
 ENV_PYTHON=<%= @virtualenv_path %>/virtualenv/bin/python
 CELERYD_MULTI="$ENV_PYTHON <%= @managepy_path %>/manage.py deployed celery multi"
 <% end %>
+CELERYD_OPTS="-c <%= @celery_concurrency ? @celery_concurrency : 0 %>"
