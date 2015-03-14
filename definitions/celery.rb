@@ -4,6 +4,7 @@ define :celery_app do
   newrelic = params[:newrelic]
   virtualenv_path = params[:virtualenv_path].sub(/\/$/, '')
   managepy_path = params[:managepy_path].sub(/\/$/, '')
+  celery_concurrency = params[:celery_concurrency]
 
   template "/etc/default/#{celeryd}" do
     source 'celeryd.conf.erb'
@@ -13,7 +14,8 @@ define :celery_app do
     mode '0700'
     variables ({
       :virtualenv_path => virtualenv_path,
-      :managepy_path => managepy_path
+      :managepy_path => managepy_path,
+      :celery_concurrency => celery_concurrency
     })
   end
 
