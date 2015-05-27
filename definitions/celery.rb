@@ -5,6 +5,10 @@ define :celery_app do
   virtualenv_path = params[:virtualenv_path].sub(/\/$/, '')
   managepy_path = params[:managepy_path].sub(/\/$/, '')
   celery_concurrency = params[:celery_concurrency]
+  celery_name_parameter = ''
+  if params[:celery_name]
+    celery_name_parameter = '-n ' + params[:celery_name]
+  end
 
   template "/etc/default/#{celeryd}" do
     source 'celeryd.conf.erb'
@@ -15,7 +19,8 @@ define :celery_app do
     variables ({
       :virtualenv_path => virtualenv_path,
       :managepy_path => managepy_path,
-      :celery_concurrency => celery_concurrency
+      :celery_concurrency => celery_concurrency,
+      :celery_name_parameter => celery_name_parameter
     })
   end
 
